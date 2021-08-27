@@ -1,22 +1,35 @@
-from flask import Flask,jsonify, request
+from flask import Flask,jsonify,request
 app = Flask(__name__)
-Student_Details = [{'name': "Teja kishore",'id':"N151127"}]
-@app.route('/')
-def index():
-    return "Welcome"
-@app.route('/Student_Details',methods=['GET'])
-def get():
-    return jsonify({'Student_Details':Student_Details})
+studentdetails = [{'name':"Teja Kishore","email" : "ytkishore7@gmail.com","id" : 1}]
+@app.route("/",methods = ["GET"])
+def home():
+    return ("Welcome")
 
-@app.route("/Student_Details",methods=['POST'])
-def create():
-    Student_Details = {'name':"V.Y.T.Kishore",'id':"n151127"}
-    Student_Details.append(Student_Details)
-    return jsonify({'Created':Student_Details})
-@app.route("/Student_Details/<str:id>",methods=['PUT'])
-def details_update(id):
-    Student_Details['id']['name']="Vemavarapu Yamuna Teja Kishore"
-    return jsonify({'Student_Details'})
+@app.route("/details", methods = ["GET"])
+def readAll():
+    return jsonify ({"studentdetails" : studentdetails})
+@app.route("/details/<string:name>", methods = ["GET"])
+def readOne(name):
+    det = [details for details in studentdetails if details['name'] == name]
+    return jsonify ({"studentdetails" : det[0]})
+
+@app.route("/details", methods = ["POST"])
+def add():
+    details = {"name" : request.json['name'], "id" : request.json[id], "email" : request.json['email']}
+    studentdetails.append(details)
+    return jsonify({"studentdetails" : studentdetails})
+
+@app.route("/details/<string:name>", methods = ["PUT"])
+def update(name):
+    det = [details for details in studentdetails if studentdetails["name"] == name]
+    det[0]["name"] = request.json['name']
+    return jsonify ({"studentdetails" : det[0]})
+
+@app.route ("details/<string:name>", methods = ["DELETE"])
+def delete(name):
+    det = [details for details in studentdetails if studentdetails["name"]==name]
+    studentdetails.remove(det[0])
+    return jsonify({"studentdetails" : studentdetails}) 
+
 if __name__ == "__main__":
-    app.run(debug=True)
-
+    app.run(debug = True, host = "0.0.0.0", port ="3000")
